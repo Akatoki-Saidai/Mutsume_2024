@@ -4,14 +4,14 @@
 ゲームのような感覚で機体を制御できます．
 
 使い方：
-1. このファイルと，server_start.pyを使用したい場所にコピーします．
-2. server_start.pyを実行します．
+1. このファイルと，start_gui.pyを使用したい場所にコピーします．
+2. start_gui.pyを実行します．
 3. 自動的にサーバーが立ち上げられます．
-4. ↑の操作をした機器と同じWi-Fiに繋いでいる機器で， http://ローカルIPアドレス:8000 にアクセスします．（IPアドレスはipconfigやip addressで調べられます）
+4. ↑の操作をした機器と同じWi-Fiに繋いでいる機器で， http://ローカルIPアドレス:8000 にアクセスします．
 
 map.pngやcamera.jpgを別のプログラムから変更することで，ブラウザに表示される画像を更新できます
-output_dataを別のプログラムから変更することで，ブラウザ上にモーターの出力などを表示できます
-ブラウザでの操作は，自動的にinput_dataに記録されます．
+data_to_browserを別のプログラムから変更することで，ブラウザ上にモーターの出力などを表示できます
+ブラウザでの操作は，自動的にdata_from_browserに記録されます．
 
 -->
 
@@ -26,9 +26,9 @@ output_dataを別のプログラムから変更することで，ブラウザ上
     <body
         style="text-align: center; background-color: black; overflow: hidden; touch-action: none; user-select: none;">
         
-        <!-- カメラで撮影した画像 -->
-        <img id="cameraImage" src="camera.jpg" alt="No Camera Image" 
-            style="height: 100dvh; aspect-ratio: 4/3; color: white; font-size: 50px;" />
+        <!-- カメラで撮影した動画 -->
+        <img id="cameraImage" src="camera.jpg" alt="No Video" 
+        style="height: 100dvh; aspect-ratio: 4/3; color: white; font-size: 50px;" />
 
         <!-- 機体の傾きのアイコン -->
         <svg id="backTiltIcon" class="tiltIcon" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="carAltIconTitle" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="miter" color="#ffffff"
@@ -95,7 +95,7 @@ output_dataを別のプログラムから変更することで，ブラウザ上
             <div id="movingStickFrame"
                 style="width: 160px; height: 160px; visibility: hidden; border-radius: 50%; border: 3px solid white;"></div>
             <div id="movingStickTouchArea"
-                style="position: absolute; top: 40px; left: 40px; width: 100px; height: 100px; border-radius: 50%; touch-action: auto;">
+                style="position: absolute; top: 40px; left: 40px; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; touch-action: auto;">
                 <svg width="40px" height="40px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" 
                     style="position: absolute; top: 30%; left: 30%; border-radius: 50%; border: 2px solid white; width: 40%; height: 40%;">
                     <title/><g data-name="25-Arrow-direction-pointer" id="_25-Arrow-direction-pointer"><polygon points="31 16 25 11 25 14 18 14 18 7 21 7 16 1 11 7 14 7 14 14 7 14 7 11 1 16 7 21 7 18 14 18 14 25 11 25 16 31 21 25 18 25 18 18 25 18 25 21 31 16" style="fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"/></g>
@@ -162,11 +162,25 @@ output_dataを別のプログラムから変更することで，ブラウザ上
         movingStickTouchArea.addEventListener("pointerup", () => {
             stickClicking = false;
         })
+        movingStickTouchArea.addEventListener("pointerleave", () => {
+            stickClicking = false;
+        })
 
         // buttonをクリックしたときの動作
-        document.getElementById("lightButton").addEventListener("click", () => {light = !light; sendData(); document.getElementById("lightButton").style.boxShadow = (light ? "0 0 0 4px #64ffff" : "none");});
-        document.getElementById("buzzerButton").addEventListener("click", () => {buzzer = !buzzer; sendData(); document.getElementById("buzzerButton").style.boxShadow = (buzzer ? "0 0 0 4px #64ffff" : "none");});
-
+        document.getElementById("lightButton").addEventListener("click", () => {
+            light = !light;
+            sendData();
+            lightButton = document.getElementById("lightButton");
+            lightButton.style.boxShadow = (light ? "0 0 0 4px #64ffff" : "none");
+            lightButton.style.fill = (light ? "#64ffff" : "white");
+        });
+        document.getElementById("buzzerButton").addEventListener("click", () => {
+            buzzer = !buzzer;
+            sendData();
+            buzzerButton = document.getElementById("buzzerButton");
+            buzzerButton.style.boxShadow = (buzzer ? "0 0 0 4px #64ffff" : "none");
+            buzzerButton.style.fill = (buzzer ? "#64ffff" : "white");
+        });
         
         // マップのセットアップ
         function setupMap() {
@@ -200,14 +214,24 @@ output_dataを別のプログラムから変更することで，ブラウザ上
             }
         }
 
+        // 受信したデータをもとに表示を更新
+        function updataData(data) {
+            data_from_server = data;
+            if(!stickClicking) {
+                setMotor(data_from_server.motor_l, data_from_server.motor_r);
+                updateMap();
+                updateTiltIcon();
+            }
+        }
+
         // モーター出力などのデータを定期的に読み込む
         function loadData() {
-            fetch("./output_data" + '?ver=' + new Date().getTime())
+            fetch("./data_to_browser" + '?ver=' + new Date().getTime())
             .then(response => {if (!response.ok) {throw new Error("Network response is not ok");}  return response.json();} )
-            .then(data => {console.log(data); data_from_server = data; if(!stickClicking){setMotor(data_from_server.motor_l, data_from_server.motor_r); updateMap(); updateTiltIcon();}} )
+            .then(data => {console.log(data); updataData(data);} )
             .catch(error => {console.error("There was a problem with the fetch operation", error);} );
         }
-        setInterval(loadData, 1000)
+        setInterval(loadData, 500)
 
         // マイコンにデータを送信する
         function sendData() {
@@ -227,20 +251,20 @@ output_dataを別のプログラムから変更することで，ブラウザ上
             })
             .then(responceData => {
                 console.log("Success:", responceData);
-                data_from_server = responceData; if(!stickClicking){setMotor(data_from_server.motor_l, data_from_server.motor_r); updateMap(); updateTiltIcon();}
+                updataData(responceData);
             })
             .catch(error => {
                 console.error("There was a problem with the fetch operation", error);
             })
         }
-        setInterval(sendData, 1000);
+        setInterval(sendData, 500);
 
-        // カメラで撮影した画像を定期的に読み込む
+        // カメラで撮影した写真を定期的に読み込む
         function loadImage() {
-            const camera_image = document.getElementById("cameraImage");
-            camera_image.src = "./camera.jpg" + '?ver=' + new Date().getTime();
+            const camera_image0 = document.getElementById("cameraImage");
+            camera_image0.src = "./camera.jpg" + '?ver=' + new Date().getTime() + '0';
         }
-        setInterval(loadImage, 3000);
+        setInterval(loadImage, 500);
 
         // タッチしていないとき，スティックの位置を中心に戻す
         setInterval(() => {if (!stickClicking) {setMotor(data_from_server.motor_l - Math.floor((data_from_server.motor_l-motorL) * 95)/100, data_from_server.motor_r - Math.floor((data_from_server.motor_r-motorR) * 95)/100);} }, 10);
