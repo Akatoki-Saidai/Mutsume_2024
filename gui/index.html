@@ -4,15 +4,17 @@
 ゲームのような感覚で機体を制御できます．
 
 使い方：
-1. このファイルと，start_gui.pyを使用したい場所にコピーします．
+1. index.htmlと，start_gui.pyを使用したい場所にコピーします．
 2. start_gui.pyを実行します．
 3. 自動的にサーバーが立ち上げられます．
 4. ↑の操作をした機器と同じWi-Fiに繋いでいる機器で， http://ローカルIPアドレス:8000 にアクセスします．
 
-map.pngやcamera.jpgを別のプログラムから変更することで，ブラウザに表示される画像を更新できます
+camera.jpgを別のプログラムから変更することで，ブラウザに表示される画像を更新できます
 data_to_browserを別のプログラムから変更することで，ブラウザ上にモーターの出力などを表示できます
 ブラウザでの操作は，自動的にdata_from_browserに記録されます．
 
+
+GUI中で地理院地図を使用しているため，マップの組織外への頒布は行わないでください．
 -->
 
 <!DOCTYPE html>
@@ -41,14 +43,16 @@ data_to_browserを別のプログラムから変更することで，ブラウ�
         </svg>
 
         <!-- マップ -->
-        <div id="fieldMapOuter" style="position: fixed; top: 5px; left: 50px; border-radius: 50%; width: 110px; height: 110px; border: 5px groove brown; overflow: hidden;">
-            <img id="fieldMap" src="./map.png" alt="field map" 
-                style="position: absolute; top: 0; left: 0; width: 150px; height: 200px;" />
+        <div id="fieldMapOuter" style="position: fixed; top: 5px; left: 50px; border-radius: 50%; width: 110px; height: 110px; border: 5px solid brown; overflow: hidden; background-color: rgb(233, 204, 109);">
+            <iframe id="fieldMap" src="https://maps.gsi.go.jp/#15/35.864628/139.608743/&base=std&ls=std&disp=1&vs=c0g0j0h0k0l0u0t0z0r0s0m0f0" width="300px" height="300px" scrolling="no" frameborder="no"
+                style="position:absolute; left:-96px; top:-114px; pointer-events: none;"></iframe>
             <svg id="fieldMapArray" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; top:45px; left:45px;">
-                <path d="M3.16496 19.5025L10.5275 2.99281C11.1178 1.66906 12.8822 1.66906 13.4725 2.99281L20.835 19.5025C21.5021 20.9984 20.0209 22.5499 18.6331 21.809L12.7294 18.657C12.2702 18.4118 11.7298 18.4118 11.2706 18.657L5.36689 21.809C3.97914 22.5499 2.49789 20.9984 3.16496 19.5025Z" fill="#04c0d6"/>
+                <path d="M3.16496 19.5025L10.5275 2.99281C11.1178 1.66906 12.8822 1.66906 13.4725 2.99281L20.835 19.5025C21.5021 20.9984 20.0209 22.5499 18.6331 21.809L12.7294 18.657C12.2702 18.4118 11.7298 18.4118 11.2706 18.657L5.36689 21.809C3.97914 22.5499 2.49789 20.9984 3.16496 19.5025Z" style="fill:#208cf8;"/>
             </svg>
-            <span style="position: absolute; height:18px; width:15px; top:-5px; left:47.5px; font-size:15px; border-radius:50%; background-color:brown;">N</span>
+            <span style="position: absolute; height:18px; width:15px; top:-5px; left:47.5px; font-size:15px; border-radius:50%; background-color:brown; color:rgb(233, 204, 109);">N</span>
         </div>
+        <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer"
+            style="position: fixed; top: 125px; left: 50px; width:120px; font-size:8px; color:brown;">出典：地理院地図</a>
 
         <!-- モーター出力の棒グラフ -->
         <div id="motorPowerBarField"
@@ -105,12 +109,12 @@ data_to_browserを別のプログラムから変更することで，ブラウ�
     </body>
 
     <script>
-        var data_from_server;
-        var motorL = 0;
-        var motorR = 0;
-        var light = false;
-        var buzzer = false;
-        var stickClicking = false;
+        var data_from_server;  // マイコンから受信したデータ
+        var motorL = 0;  // モーターLの出力
+        var motorR = 0;  // モーターRの出力
+        var light = false;  // ライトのon/off
+        var buzzer = false;  // ブザーのon/off
+        var stickClicking = false;  // 移動方向の制御用のスティック(?)を今クリックしているか
 
         // モーターの値を設定，それに合わせてスティックと棒グラフを動かす
         const movingStickFrameStyle = getComputedStyle(document.getElementById("movingStickFrame"));
@@ -167,41 +171,42 @@ data_to_browserを別のプログラムから変更することで，ブラウ�
         })
 
         // buttonをクリックしたときの動作
-        document.getElementById("lightButton").addEventListener("click", () => {
-            light = !light;
-            sendData();
+        function setLight(new_light) {
+            light = new_light;
             lightButton = document.getElementById("lightButton");
             lightButton.style.boxShadow = (light ? "0 0 0 4px #64ffff" : "none");
             lightButton.style.fill = (light ? "#64ffff" : "white");
-        });
-        document.getElementById("buzzerButton").addEventListener("click", () => {
-            buzzer = !buzzer;
+        }
+        document.getElementById("lightButton").addEventListener("click", () => {
+            setLight(!light)
             sendData();
+        });
+        function setBuzzer(new_buzzer) {
+            buzzer = new_buzzer;
             buzzerButton = document.getElementById("buzzerButton");
             buzzerButton.style.boxShadow = (buzzer ? "0 0 0 4px #64ffff" : "none");
             buzzerButton.style.fill = (buzzer ? "#64ffff" : "white");
+        }
+        document.getElementById("buzzerButton").addEventListener("click", () => {
+            setBuzzer(!buzzer);
+            sendData();
         });
         
         // マップのセットアップ
-        function setupMap() {
-            const fieldMap = document.getElementById("fieldMap");
-            const lat0 = data_from_server.map_coordinates_upper_left[0], lon0 = data_from_server.map_coordinates_upper_left[1], lat1 = data_from_server.map_coordinates_lower_right[0], lon1 = data_from_server.map_coordinates_lower_right[1], latNow = data_from_server.lat, lonNow = data_from_server.lon;
-            const dLat = lat1 - lat0, dLon = lon1 - lon0;
-            const fieldHeight = Number(getComputedStyle(fieldMap).height.replace("px", ""));
-            const fieldWidth = Number(getComputedStyle(fieldMap).width.replace("px", ""));
-            const fieldMapOuter = document.getElementById("fieldMapOuter");
-            const outerHeight = Number(getComputedStyle(fieldMapOuter).height.replace("px", ""));
-            const outerWidth = Number(getComputedStyle(fieldMapOuter).width.replace("px", ""));
-            const lot_angle = Math.PI/2 - Math.atan2(lat1-lat0, lon1-lon0) - Math.atan2(fieldHeight, fieldWidth);
-            const scalePxDeg = Math.sqrt(fieldHeight*fieldHeight + fieldWidth*fieldWidth) / Math.sqrt(dLat*dLat + dLon*dLon);
-            fieldMap.style.transformOrigin = ((Math.cos(lot_angle)*(latNow - lat0) + Math.sin(lot_angle)*(lonNow - lon0))*scalePxDeg + ", " + (Math.sin(lot_angle)*(latNow - lat0) + Math.cos(lot_angle)*(lonNow - lon0))*scalePxDeg);
-            fieldMap.style.transform = "translate(" + ((Math.cos(lot_angle)*(latNow - lat0) + Math.sin(lot_angle)*(lonNow - lon0))*(-1*scalePxDeg) + outerWidth/2) + "px, " + ((Math.sin(lot_angle)*(latNow - lat0) + Math.cos(lot_angle)*(lonNow - lon0))*(-1*scalePxDeg) + outerHeight/2) + "px) rotate(" + (lot_angle - Math.PI/2) + "rad)";
-        }
-        setInterval(setupMap, 60*1000);
-        function updateMap() {
-            const mag_front = data_from_server.mag[0], mag_left = data_from_server.mag[1], mag_top = data_from_server.mag[2];
-            if (mag_front !== null && mag_left !== null) {
-                document.getElementById("fieldMapArray").style.transform = "rotate(" + (-1 * Math.atan2(mag_left, mag_front)*180/Math.PI) + "deg)";
+        var oldLat = 35.864628, oldLon = 139.608743;
+        var mapLoadable = true;
+        function updateMap(new_lat, new_lon) {
+            if (new_lat === null || new_lon === null)
+                return;
+            if (mapLoadable === false)
+                return;
+            var scale = 15;
+            if (new_lat != oldLat || new_lon != oldLon) {
+                document.getElementById("fieldMap").src = "https://maps.gsi.go.jp/#" + scale + "/" + new_lat + "/" + new_lon + "/&base=std&ls=std&disp=1&vs=c0g0j0h0k0l0u0t0z0r0s0m0f0";
+                oldLat = new_lat;
+                oldLon = new_lon;
+                mapLoadable = false
+                setTimeout(()=>{mapLoadable=true;}, 5000);
             }
         }
 
@@ -219,12 +224,14 @@ data_to_browserを別のプログラムから変更することで，ブラウ�
             data_from_server = data;
             if(!stickClicking) {
                 setMotor(data_from_server.motor_l, data_from_server.motor_r);
-                updateMap();
-                updateTiltIcon();
             }
+            setLight(data_from_server.light);
+            setBuzzer(data_from_server.buzzer);
+            updateMap(data_from_server.lat, data_from_server.lon);
+            updateTiltIcon();
         }
 
-        // モーター出力などのデータを定期的に読み込む
+        // モーター出力などのデータをマイコンから定期的に読み込む
         function loadData() {
             fetch("./data_to_browser" + '?ver=' + new Date().getTime())
             .then(response => {if (!response.ok) {throw new Error("Network response is not ok");}  return response.json();} )
@@ -233,7 +240,7 @@ data_to_browserを別のプログラムから変更することで，ブラウ�
         }
         setInterval(loadData, 500)
 
-        // マイコンにデータを送信する
+        // マイコンにデータを送信したあと受信する
         function sendData() {
             data_to_server = {motor_l: (motorL<-1 ? -1 : (motorL>1 ? 1 : motorL)), motor_r: (motorR<-1 ? -1 : (motorR>1 ? 1 : motorR)), light: light, buzzer: buzzer};
             fetch(data_from_server.local_ip, {
@@ -262,12 +269,12 @@ data_to_browserを別のプログラムから変更することで，ブラウ�
         // カメラで撮影した写真を定期的に読み込む
         function loadImage() {
             const camera_image0 = document.getElementById("cameraImage");
-            camera_image0.src = "./camera.jpg" + '?ver=' + new Date().getTime() + '0';
+            camera_image0.src = "./camera.jpg" + '?ver=' + new Date().getTime();
         }
         setInterval(loadImage, 500);
 
         // タッチしていないとき，スティックの位置を中心に戻す
-        setInterval(() => {if (!stickClicking) {setMotor(data_from_server.motor_l - Math.floor((data_from_server.motor_l-motorL) * 95)/100, data_from_server.motor_r - Math.floor((data_from_server.motor_r-motorR) * 95)/100);} }, 10);
+        setInterval(() => {if (!stickClicking) {setMotor(motorL - (motorL - data_from_server.motor_l)/10, motorR - (motorR - data_from_server.motor_r)/10);} }, 10);
 
     </script>
 </html>

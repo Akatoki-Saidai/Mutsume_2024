@@ -1,11 +1,11 @@
 {
     "motor_l": 0,
     "motor_r": 0,
+    "light": false,
+    "buzzer": false,
     "lat": null,
     "lon": null,
     "grav": [null, null, null],
     "mag": [null, null, null],
-    "map_coordinates_upper_left": [null, null],
-    "map_coordinates_lower_right": [null, null],
-    "local_ip": null
+    "local_ip": "192.168.0.0"
 }
