@@ -14,7 +14,7 @@ data_to_browserを別のプログラムから変更することで，ブラウ�
 ブラウザでの操作は，自動的にdata_from_browserに記録されます．
 
 
-GUI中で地理院地図を使用しているため，地図のスクリーンショットを組織外に頒布しないでください
+GUI中で地理院地図を使用しているため，マップの組織外への頒布は行わないでください．
 -->
 
 <!DOCTYPE html>
@@ -53,7 +53,7 @@ GUI中で地理院地図を使用しているため，地図のスクリーン�
             <svg id="fieldMapArray" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; top:65px; left:65px;">
                 <path d="M3.16496 19.5025L10.5275 2.99281C11.1178 1.66906 12.8822 1.66906 13.4725 2.99281L20.835 19.5025C21.5021 20.9984 20.0209 22.5499 18.6331 21.809L12.7294 18.657C12.2702 18.4118 11.7298 18.4118 11.2706 18.657L5.36689 21.809C3.97914 22.5499 2.49789 20.9984 3.16496 19.5025Z" style="fill:#208cf8;"/>
             </svg>
-            <span style="position: absolute; height:18px; width:15px; top:-5px; left:67.5px; font-size:15px; border-radius:50%; background-color:brown; color:rgb(233, 204, 109);">N</span>
+            <span style="position: absolute; height:18px; width:15px; top:-5px; left:67.5px; font-size:15px; font-family:cursive;border-radius:50%; background-color:brown; color:rgb(233, 204, 109);">N</span>
         </div>
         <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer"
             style="position: fixed; top: 165px; left: 70px; width:120px; font-size:8px; color:brown;">出典：地理院地図</a>
@@ -216,14 +216,13 @@ GUI中で地理院地図を使用しているため，地図のスクリーン�
             let newX = ((newLon * 20037508.34 / 180.0) + (6378137 * Math.PI)) / unit;
             let newY = ((6378137 * Math.PI) - (Math.log(Math.tan((90.0 + newLat) * Math.PI / 360.0)) * 20037508.34 / Math.PI)) / unit;
 
-            // https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png : ベースマップ
-            // https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg : 写真
-            const mainURL = "https://cyberjapandata.gsi.go.jp/xyz/std"
+            // const mainURL = "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png" : ベースマップ
+            const mainURL = "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"  // 写真
             if (mapLoadable) {
                 if (Math.floor(mapX)!==Math.floor(newX) || Math.floor(mapY)!==Math.floor(newY)) {
                     for (i=0; i<3; ++i) {
                         for (j=0; j<3; ++j) {
-                            document.getElementById("mapImage" + (3*i + j)).src = mainURL + "/" + mapScale + "/" + (Math.floor(newX) + j -1) + "/" + (Math.floor(newY) + i -1) + ".png";
+                            document.getElementById("mapImage" + (3*i + j)).src = mainURL.replace("{z}", mapScale).replace("{x}", Math.floor(newX) + j -1).replace("{y}", Math.floor(newY) + i -1);
                         }
                     }
                     console.log("map update!")
