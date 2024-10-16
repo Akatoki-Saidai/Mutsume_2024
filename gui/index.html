@@ -102,13 +102,10 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             style="position: fixed; bottom: 20px; left: 40px;">
             <div id="movingStickFrame"
                 style="width: 160px; height: 160px; visibility: hidden; border-radius: 50%; border: 3px solid white;"></div>
-            <div id="movingStickTouchArea"
-                style="position: absolute; top: 30px; left: 30px; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; touch-action: auto;">
-                <svg width="40px" height="40px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" 
-                    style="position: absolute; top: 30%; left: 30%; border-radius: 50%; border: 2px solid white; width: 40%; height: 40%;">
-                    <title/><g data-name="25-Arrow-direction-pointer" id="_25-Arrow-direction-pointer"><polygon points="31 16 25 11 25 14 18 14 18 7 21 7 16 1 11 7 14 7 14 14 7 14 7 11 1 16 7 21 7 18 14 18 14 25 11 25 16 31 21 25 18 25 18 18 25 18 25 21 31 16" style="fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"/></g>
-                </svg>
-            </div>
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" id="movingStickKnob"
+                style="position: absolute; top: 60px; left: 60px; border-radius: 50%; border: 2px solid white; width: 40px; height: 40px; touch-action: auto;">
+                <title/><g data-name="25-Arrow-direction-pointer" id="_25-Arrow-direction-pointer"><polygon points="31 16 25 11 25 14 18 14 18 7 21 7 16 1 11 7 14 7 14 14 7 14 7 11 1 16 7 21 7 18 14 18 14 25 11 25 16 31 21 25 18 25 18 18 25 18 25 21 31 16" style="fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"/></g>
+            </svg>
         </div>
     </body>
 
@@ -131,8 +128,8 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             motorLeftPowerBar.style.background = (0<=motorL ? `linear-gradient(to right, gray 50%, red 50%, red ${motorL*50+50}% ,gray ${motorL*50+50}%)` : `linear-gradient(to right, gray ${motorL*50+50}% ,blue ${motorL*50+50}%, blue 50%, gray 50%)`);
             motorRightPowerBar.style.background = (0<=motorR ? `linear-gradient(to right, gray 50%, red 50%, red ${motorR*50+50}% ,gray ${motorR*50+50}%)` : `linear-gradient(to right, gray ${motorR*50+50}% ,blue ${motorR*50+50}%, blue 50%, gray 50%)`);
 
-            const movingStickTouchArea = document.getElementById("movingStickTouchArea");
-            movingStickTouchArea.style.transform = `translate(${(motorL - motorR)*40}px, ${- (motorL + motorR)*40}px)`;
+            const movingStickKnob = document.getElementById("movingStickKnob");
+            movingStickKnob.style.transform = `translate(${(motorL - motorR)*40}px, ${- (motorL + motorR)*40}px)`;
         }
 
         // タッチに合わせて棒グラフの値を動かす
@@ -144,18 +141,18 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
         document.getElementById("motorRightPowerBar").addEventListener("pointerup", e => {stickClicking = false;});
 
         // タッチに合わせて，スティックを動かす
-        const movingStickTouchArea = document.getElementById("movingStickTouchArea");
-        movingStickTouchArea.addEventListener("pointerdown", (e) => {
+        const movingStickKnob = document.getElementById("movingStickKnob");
+        movingStickKnob.addEventListener("pointerdown", (e) => {
             stickClicking = true;
-            movingStickTouchArea.setPointerCapture(e.pointerId);
+            movingStickKnob.setPointerCapture(e.pointerId);
         });
         const movingStick = document.getElementById("movingStick");
-        movingStickTouchArea.addEventListener("pointermove", (e) => {
+        movingStickKnob.addEventListener("pointermove", (e) => {
             if (e.buttons) {
                 stickClicking = true;
                 if (motorL*motorL + motorR*motorR <= 2) {
                     const rect = movingStick.getBoundingClientRect();
-                    setMotor((e.clientX - rect.left - e.clientY + rect.top)/160, (-e.clientX + rect.left - e.clientY + rect.top)/160 + 1);
+                    setMotor((e.clientX - rect.left - e.clientY + rect.top)/160*1.5, (-e.clientX + rect.left - e.clientY + rect.top)/160*1.5 + 1.5);
                 } else {
                     setMotor(motorL * 0.99, motorR * 0.99);
                 }
@@ -164,12 +161,12 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             }
             document.getElementById("movingStickFrame").style.visibility = (motorL*motorL + motorR*motorR > 1.8 ? "visible" : "hidden");
         });
-        movingStickTouchArea.addEventListener("pointerup", (e) => {
+        movingStickKnob.addEventListener("pointerup", (e) => {
             stickClicking = false;
             document.getElementById("movingStickFrame").style.visibility = "hidden";
-            movingStickTouchArea.releasePointerCapture(e.pointerId);
+            movingStickKnob.releasePointerCapture(e.pointerId);
         });
-        movingStickTouchArea.addEventListener("pointerleave", () => {
+        movingStickKnob.addEventListener("pointerleave", () => {
             stickClicking = false;
         });
 
