@@ -228,6 +228,12 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             }
             document.getElementById("joinedMap").style.transform = `translate(${-(newX - Math.floor(newX))*150}px, ${-(newY - Math.floor(newY))*150}px)`;
             lat = newLat, lon = newLon, mapX = newX, mapY = newY;
+
+            // 矢印を回転
+            const mag_front = data_from_server.mag[0], mag_left = data_from_server.mag[1], mag_top = data_from_server.mag[2];
+            if (mag_front !== null && mag_left !== null) {
+                document.getElementById("fieldMapArray").style.transform = `rotate(${-1 * Math.atan2(mag_left, mag_front)}rad)`;
+            }
         }
 
         // 傾きアイコンの制御
