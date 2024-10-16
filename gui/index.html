@@ -23,11 +23,11 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
         <meta charset="utf-8" />
         <title>CanSat Remote Controler</title>
         <meta name="author" content="Akatoki Saidai" />
-        <meta name="description" content="ラズベリーPiなどのマイコンを使ったロボットを遠隔操作するためのGUIです．"/>
+        <meta name="description" content="ラズベリーPiなどのマイコンを使ったロボットを遠隔操作するためのGUIです"/>
     </head>
     <body
         style="text-align: center; background-color: black; overflow: hidden; touch-action: none; user-select: none;">
-        
+
         <!-- カメラで撮影した動画 -->
         <img id="cameraImage" src="camera.jpg" alt="No Video" 
         style="height: 100dvh; aspect-ratio: 4/3; color: white; font-size: 50px;" />
@@ -51,9 +51,9 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             </div>
             <style>.mapImage{position:absolute; width:150px; height:150px;}</style>
             <svg id="fieldMapArray" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; top:65px; left:65px;">
-                <path d="M3.16496 19.5025L10.5275 2.99281C11.1178 1.66906 12.8822 1.66906 13.4725 2.99281L20.835 19.5025C21.5021 20.9984 20.0209 22.5499 18.6331 21.809L12.7294 18.657C12.2702 18.4118 11.7298 18.4118 11.2706 18.657L5.36689 21.809C3.97914 22.5499 2.49789 20.9984 3.16496 19.5025Z" style="fill:#208cf8;"/>
+                <path d="M3.16496 19.5025L10.5275 2.99281C11.1178 1.66906 12.8822 1.66906 13.4725 2.99281L20.835 19.5025C21.5021 20.9984 20.0209 22.5499 18.6331 21.809L12.7294 18.657C12.2702 18.4118 11.7298 18.4118 11.2706 18.657L5.36689 21.809C3.97914 22.5499 2.49789 20.9984 3.16496 19.5025Z" style="fill:#10008d;"/>
             </svg>
-            <span style="position: absolute; height:18px; width:15px; top:-5px; left:67.5px; font-size:15px; font-family:cursive;border-radius:50%; background-color:brown; color:rgb(233, 204, 109);">N</span>
+            <span style="position: absolute; height:18px; width:15px; top:-5px; left:67.5px; font-size:15px; font-family:sans-serif; border-radius:50%; background-color:brown; color:rgb(233, 204, 109);">N</span>
         </div>
         <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer"
             style="position: fixed; top: 165px; left: 70px; width:120px; font-size:8px; color:brown;">出典：地理院地図</a>
@@ -103,7 +103,7 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             <div id="movingStickFrame"
                 style="width: 160px; height: 160px; visibility: hidden; border-radius: 50%; border: 3px solid white;"></div>
             <div id="movingStickTouchArea"
-                style="position: absolute; top: 40px; left: 40px; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; touch-action: auto;">
+                style="position: absolute; top: 30px; left: 30px; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; touch-action: auto;">
                 <svg width="40px" height="40px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" 
                     style="position: absolute; top: 30%; left: 30%; border-radius: 50%; border: 2px solid white; width: 40%; height: 40%;">
                     <title/><g data-name="25-Arrow-direction-pointer" id="_25-Arrow-direction-pointer"><polygon points="31 16 25 11 25 14 18 14 18 7 21 7 16 1 11 7 14 7 14 14 7 14 7 11 1 16 7 21 7 18 14 18 14 25 11 25 16 31 21 25 18 25 18 18 25 18 25 21 31 16" style="fill:none;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"/></g>
@@ -121,12 +121,6 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
         var stickClicking = false;  // 移動方向の制御用のスティック(?)を今クリックしているか
 
         // モーターの値を設定，それに合わせてスティックと棒グラフを動かす
-        const movingStickFrameStyle = getComputedStyle(document.getElementById("movingStickFrame"));
-        const movingStickFrameHeight = Number(movingStickFrameStyle.height.replace("px", ""));
-        const movingStickFrameWidth = Number(movingStickFrameStyle.width.replace("px", ""));
-        const movingStickTouchAreaStyle = getComputedStyle(document.getElementById("movingStickTouchArea"));
-        const movingStickTouchAreaHeight = Number(movingStickTouchAreaStyle.height.replace("px", ""));
-        const movingStickTouchAreaWidth = Number(movingStickTouchAreaStyle.width.replace("px", ""));
         function setMotor(new_ml, new_mr) {
             motorL = new_ml;
             motorR = new_mr;
@@ -134,13 +128,11 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             const motorRightPowerBar = document.getElementById("motorRightPowerBar");
             motorLeftPowerBar.value = motorL;
             motorRightPowerBar.value = motorR;
-            motorLeftPowerBar.style.background = (0<=motorL ? ("linear-gradient(to right, gray 50%, red 50%, red "+ String(motorL*50+50) + "% ,gray " + String(motorL*50+50) + "%)") : ("linear-gradient(to right, gray "+ String(motorL*50+50) + "% ,blue " + String(motorL*50+50) + "%, blue 50%, gray 50%)"));
-            motorRightPowerBar.style.background = (0<=motorR ? ("linear-gradient(to right, gray 50%, red 50%, red "+ String(motorR*50+50) + "% ,gray " + String(motorR*50+50) + "%)") : ("linear-gradient(to right, gray "+ String(motorR*50+50) + "% ,blue " + String(motorR*50+50) + "%, blue 50%, gray 50%)"));
+            motorLeftPowerBar.style.background = (0<=motorL ? `linear-gradient(to right, gray 50%, red 50%, red ${motorL*50+50}% ,gray ${motorL*50+50}%)` : `linear-gradient(to right, gray ${motorL*50+50}% ,blue ${motorL*50+50}%, blue 50%, gray 50%)`);
+            motorRightPowerBar.style.background = (0<=motorR ? `linear-gradient(to right, gray 50%, red 50%, red ${motorR*50+50}% ,gray ${motorR*50+50}%)` : `linear-gradient(to right, gray ${motorR*50+50}% ,blue ${motorR*50+50}%, blue 50%, gray 50%)`);
 
-            const movingStickFrame = document.getElementById("movingStickFrame");
             const movingStickTouchArea = document.getElementById("movingStickTouchArea");
-            movingStickTouchArea.style.top = ((movingStickFrameHeight - movingStickTouchAreaHeight)/2 - (motorL*movingStickFrameWidth + motorR*movingStickFrameHeight)/4) + "px";
-            movingStickTouchArea.style.left = ((movingStickFrameWidth - movingStickTouchAreaWidth)/2 + (motorL*movingStickFrameWidth - motorR*movingStickFrameHeight)/4) + "px";
+            movingStickTouchArea.style.transform = `translate(${(motorL - motorR)*40}px, ${- (motorL + motorR)*40}px)`;
         }
 
         // タッチに合わせて棒グラフの値を動かす
@@ -153,26 +145,33 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
 
         // タッチに合わせて，スティックを動かす
         const movingStickTouchArea = document.getElementById("movingStickTouchArea");
-        movingStickTouchArea.addEventListener("pointerdown", () => {stickClicking = true;})
-        movingStickTouchArea.addEventListener("pointermove", e => {
+        movingStickTouchArea.addEventListener("pointerdown", (e) => {
+            stickClicking = true;
+            movingStickTouchArea.setPointerCapture(e.pointerId);
+        });
+        const movingStick = document.getElementById("movingStick");
+        movingStickTouchArea.addEventListener("pointermove", (e) => {
             if (e.buttons) {
                 stickClicking = true;
                 if (motorL*motorL + motorR*motorR <= 2) {
-                    setMotor(motorL + (e.movementX - e.movementY)*2/movingStickTouchAreaWidth, motorR + (-e.movementX - e.movementY)*2/movingStickTouchAreaWidth);
+                    const rect = movingStick.getBoundingClientRect();
+                    setMotor((e.clientX - rect.left - e.clientY + rect.top)/160, (-e.clientX + rect.left - e.clientY + rect.top)/160 + 1);
                 } else {
                     setMotor(motorL * 0.99, motorR * 0.99);
                 }
             } else {
-                stickClicking = false
+                stickClicking = false;
             }
             document.getElementById("movingStickFrame").style.visibility = (motorL*motorL + motorR*motorR > 1.8 ? "visible" : "hidden");
-        })
-        movingStickTouchArea.addEventListener("pointerup", () => {
+        });
+        movingStickTouchArea.addEventListener("pointerup", (e) => {
             stickClicking = false;
-        })
+            document.getElementById("movingStickFrame").style.visibility = "hidden";
+            movingStickTouchArea.releasePointerCapture(e.pointerId);
+        });
         movingStickTouchArea.addEventListener("pointerleave", () => {
             stickClicking = false;
-        })
+        });
 
         // buttonをクリックしたときの動作
         var lightForceOn = false;
@@ -206,17 +205,17 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
         
         // マップのセットアップ
         var lat = 35.861270, lon = 139.607517, mapX = 0, mapY = 0;
-        const mapScale = 16  // マップの縮尺
+        const mapScale = 16;  // マップの縮尺
         var mapLoadable = true;
         function updateMap(newLat, newLon) {
             if (newLat === null || newLon === null) {
                 newLat = lat, newLon = lon;
             }
-            const unit = 2 * 6378137 * Math.PI / Math.pow(2, mapScale)
+            const unit = 2 * 6378137 * Math.PI / Math.pow(2, mapScale);
             let newX = ((newLon * 20037508.34 / 180.0) + (6378137 * Math.PI)) / unit;
             let newY = ((6378137 * Math.PI) - (Math.log(Math.tan((90.0 + newLat) * Math.PI / 360.0)) * 20037508.34 / Math.PI)) / unit;
 
-            // const mainURL = "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png" : ベースマップ
+            // const mainURL = "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png" // ベースマップ
             const mainURL = "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"  // 写真
             if (mapLoadable) {
                 if (Math.floor(mapX)!==Math.floor(newX) || Math.floor(mapY)!==Math.floor(newY)) {
@@ -225,23 +224,20 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
                             document.getElementById("mapImage" + (3*i + j)).src = mainURL.replace("{z}", mapScale).replace("{x}", Math.floor(newX) + j -1).replace("{y}", Math.floor(newY) + i -1);
                         }
                     }
-                    console.log("map update!")
                     mapLoadable = false;
                     setTimeout(()=>{mapLoadable=true;}, 5000);
                 }
             }
-
-            document.getElementById("joinedMap").style.transform = "translate(" + (-(newX - Math.floor(newX))*150) + "px," + (-(newY - Math.floor(newY))*150) + "px)";
-
+            document.getElementById("joinedMap").style.transform = `translate(${-(newX - Math.floor(newX))*150}px, ${-(newY - Math.floor(newY))*150}px)`;
             lat = newLat, lon = newLon, mapX = newX, mapY = newY;
         }
 
         // 傾きアイコンの制御
         function updateTiltIcon() {
-            const grav_front = data_from_server.grav[0], grav_left = data_from_server.grav[1], grav_top = data_from_server.grav[2]
+            const grav_front = data_from_server.grav[0], grav_left = data_from_server.grav[1], grav_top = data_from_server.grav[2];
             if (grav_front !== null && grav_left !== null && grav_top !== null) {
-                document.getElementById("backTiltIcon").style.transform = "rotate(" + (Math.atan2(grav_top, grav_left)*180/Math.PI - 90) + "deg)";
-                document.getElementById("sideTiltIcon").style.transform = "rotate(" + (Math.atan2(grav_top, grav_front)*180/Math.PI - 90) + "deg)";
+                document.getElementById("backTiltIcon").style.transform = `rotate(${Math.atan2(grav_top, grav_left)*180/Math.PI - 90}deg)`;
+                document.getElementById("sideTiltIcon").style.transform = `rotate(${Math.atan2(grav_top, grav_front)*180/Math.PI - 90}deg)`;
             }
         }
 
@@ -259,21 +255,19 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
 
         // モーター出力などのデータをマイコンから定期的に読み込む
         function loadData() {
-            fetch("./data_to_browser" + '?ver=' + new Date().getTime())
+            fetch(`./data_to_browser?ver=${new Date().getTime()}`)
             .then(response => {if (!response.ok) {throw new Error("Network response is not ok");}  return response.json();} )
             .then(data => {console.log(data); updataData(data);} )
             .catch(error => {console.error("There was a problem with the fetch operation", error);} );
         }
-        setInterval(loadData, 500)
+        setInterval(loadData, 500);
 
         // マイコンにデータを送信したあと受信する
         function sendData() {
             data_to_server = {motor_l: (motorL<-1 ? -1 : (motorL>1 ? 1 : motorL)), motor_r: (motorR<-1 ? -1 : (motorR>1 ? 1 : motorR)), light: light, buzzer: buzzer};
             fetch(data_from_server.local_ip, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(data_to_server)
             })
             .then(response => {
@@ -288,16 +282,12 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             })
             .catch(error => {
                 console.error("There was a problem with the fetch operation", error);
-            })
+            });
         }
         setInterval(sendData, 500);
 
         // カメラで撮影した写真を定期的に読み込む
-        function loadImage() {
-            const camera_image0 = document.getElementById("cameraImage");
-            camera_image0.src = "./camera.jpg" + '?ver=' + new Date().getTime();
-        }
-        setInterval(loadImage, 500);
+        setInterval(() => {document.getElementById("cameraImage").src = `./camera.jpg?ver=${new Date().getTime()}`}, 500);
 
         // タッチしていないとき，スティックの位置を中心に戻す
         setInterval(() => {if (!stickClicking) {setMotor(motorL - (motorL - data_from_server.motor_l)/10, motorR - (motorR - data_from_server.motor_r)/10);} }, 10);
