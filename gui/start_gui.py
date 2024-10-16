@@ -26,8 +26,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         with open("./data_to_browser", "r") as f:
             self.wfile.write(f.read().encode('utf-8'))
 
+ip_msg = " または ".join(f"http://{ip}:{PORT}" for ip in local_ip_list)
+
 with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
-    print(f"サーバーが稼働しました！\n同じネットワーク内のブラウザで {" または ".join(f"http://{ip}:{PORT}" for ip in local_ip_list)} にアクセスしてください")
+    print(f"サーバーが稼働しました！\n同じネットワーク内のブラウザで {ip_msg} にアクセスしてください")
     httpd.serve_forever()
 
 ## 参考にしたサイト
