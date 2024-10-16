@@ -1,4 +1,6 @@
 # ×ボタン→〇ボタン，〇ボタン→△ボタン，△ボタン→□ボタン，□ボタン→×ボタン
+# スピーカー設定をPWM出力可能にしておく(/boot/firmware/config.txtの末尾に"dtoverlay=audremap,pins_12_13"を追加)
+
 from pyPS4Controller.controller import Controller
 from gpiozero import Motor
 from gpiozero.pins.pigpio import PiGPIOFactory
@@ -124,7 +126,7 @@ class MyController(Controller):
             # print("glados")
             if glados.poll() is None:
                 # ファイルパス要変更
-                glados = subprocess.Popen("aplay /home/desktop/grados.wav", shell=True)
+                glados = subprocess.Popen("aplay --device=hw:1,0 /home/desktop/grados.wav", shell=True)
                 print(glados.returncode)
             else:
                 print("spreaker is running now!")
@@ -139,7 +141,7 @@ class MyController(Controller):
             # print("glados")
             if stanley.poll() is None:
                 # ファイルパス要変更
-                stanley = subprocess.Popen("aplay /home/desktop/stanley.wav", shell=True)
+                stanley = subprocess.Popen("aplay --device=hw:1,0 /home/desktop/stanley.wav", shell=True)
                 print(stanley.returncode)
             else:
                 print("spreaker is running now!")
@@ -154,7 +156,7 @@ class MyController(Controller):
             # print("glados")
             if glenn.poll() is None:
                 # ファイルパス要変更
-                glenn = subprocess.Popen("aplay /home/desktop/glenn.wav", shell=True)
+                glenn = subprocess.Popen("aplay --device=hw:1,0 /home/desktop/glenn.wav", shell=True)
                 print(glenn.returncode)
             else:
                 print("spreaker is running now!")
