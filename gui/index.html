@@ -43,13 +43,14 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
         </svg>
 
         <!-- マップ -->
-        <div id="fieldMapOuter" style="position: fixed; top: 5px; left: 50px; border-radius: 50%; width: 150px; height: 150px; border: 5px solid brown; overflow: hidden; background-color: rgb(233, 204, 109);">
+        <div id="fieldMapOuter" style="position: fixed; top: 5px; left: 50px; border-radius: 50%; width: 150px; height: 150px; border: 5px solid brown; overflow: hidden; background-color: rgb(233, 204, 109); text-align:center;">
             <div id="joinedMap" style="position:absolute; left:-75px; top:-75px; transform:translate(-75px, -75px);">
                 <img id="mapImage0" class="mapImage" style="left:  0px; top:  0px;" /> <img id="mapImage1" class="mapImage" style="left:150px; top:  0px;" /> <img id="mapImage2" class="mapImage" style="left:300px; top:  0px;" />
                 <img id="mapImage3" class="mapImage" style="left:  0px; top:150px;" /> <img id="mapImage4" class="mapImage" style="left:150px; top:150px;" /> <img id="mapImage5" class="mapImage" style="left:300px; top:150px;" />
                 <img id="mapImage6" class="mapImage" style="left:  0px; top:300px;" /> <img id="mapImage7" class="mapImage" style="left:150px; top:300px;" /> <img id="mapImage8" class="mapImage" style="left:300px; top:300px;" />
             </div>
             <style>.mapImage{position:absolute; width:150px; height:150px;}</style>
+            <span style="color:rgb(81, 47, 8); font-size:50px; font-family:sans-serif;">No Map</span>
             <svg id="fieldMapArray" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; top:65px; left:65px;">
                 <path d="M3.16496 19.5025L10.5275 2.99281C11.1178 1.66906 12.8822 1.66906 13.4725 2.99281L20.835 19.5025C21.5021 20.9984 20.0209 22.5499 18.6331 21.809L12.7294 18.657C12.2702 18.4118 11.7298 18.4118 11.2706 18.657L5.36689 21.809C3.97914 22.5499 2.49789 20.9984 3.16496 19.5025Z" style="fill:#10008d;"/>
             </svg>
