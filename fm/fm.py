@@ -126,7 +126,7 @@ def start_camera():
         os.rename("camera_temp.jpg", "camera.jpg")
 
 
-##### 並列処理を開始 #####
+##### 平行並列処理を開始 #####
 
 # コントローラーを起動
 controller_thread = threading.Thread(target=start_controller)
