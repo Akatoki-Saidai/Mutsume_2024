@@ -33,7 +33,7 @@ high_power_led.off()
 
 ##### スピーカー #####
 class C():
-    def poll():
+    def poll(self):
         return None
 proces_aplay = C()
 def audio_play():
