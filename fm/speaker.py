@@ -2,7 +2,8 @@ import pyaudio
 import threading
 import wave
 
-now_playing = False
+class Playing():
+    now = False  # 実質的なグローバル変数
 
 def _play_audio(filename):
     with wave.open(filename, 'rb') as wf:
@@ -42,15 +43,15 @@ def _play_audio(filename):
         speaker.terminate()
 
 def play():
-    if not now_playing:
-        now_playing = True
+    if not Playing.now:
+        Playing.now = True
         t = threading.Thread(target=_play_audio, args=('ファイル名1.wav',))
         t.start()
-        now_playing = False
+        Playing.now = False
 
 # def play2():
-#     if not now_playing:
-#         now_playing = True
+#     if not Playing.now:
+#         Playing.now = True
 #         t = threading.Thread(target=play_audio, args=('ファイル名2.wav',))
 #         t.start()
-        # now_playing = False
+#         Playing.now = False

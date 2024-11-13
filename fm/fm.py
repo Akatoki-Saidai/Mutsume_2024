@@ -35,12 +35,12 @@ high_power_led.off()
 ###### コントローラ #####
 
 class LastControl():
-    time = time.time()
+    time = time.time()  # 実質的なグローバル変数
 
 def transf(raw):
     temp = (raw + 32767) / 65534 / 2
     # Filter values that are too weak for the motors to move
-    if abs(temp) < 0.9:
+    if abs(temp) < 0.9:  # <-- 0.3の間違いでは?
         return 0
     # Return a value between 0.3 and 1.0
     else:
@@ -107,7 +107,7 @@ def write_to_gui():
     data_to_browser['motor_r'] = motor_right.value
     data_to_browser['motor_l'] = motor_left.value
     data_to_browser['light'] = high_power_led.value
-    data_to_browser['buzzer'] = speaker.now_playing
+    data_to_browser['buzzer'] = speaker.Playing.now
     s = json.dumps(data_to_browser)
     with open('data_to_browser', 'w') as f:
         f.write(s)
