@@ -16,7 +16,6 @@ from picamera2 import Picamera2
 from pyPS4Controller.controller import Controller
 
 import start_gui
-import speaker
 
 
 ##### モーター #####
@@ -47,8 +46,7 @@ def audio_play():
 
 ###### コントローラ #####
 
-class LastControl():
-    time = time.time()  # 実質的なグローバル変数
+last_controll_time = time.time()  # 実質的なグローバル変数
 
 def transf(raw):
     temp = (raw + 32767) / 65534 / 2
@@ -65,37 +63,44 @@ class MyController(Controller):
     
     def on_R3_up(self, value):
         print(f'ctrl,R3,up,{value}')
-        LastControl.time = time.time()
+        global last_controll_time
+        last_controll_time = time.time()
         motor_right.value = transf(value)
     
     def on_R3_down(self, value):
         print(f'ctrl,R3,down,{value}')
-        LastControl.time = time.time()
+        global last_controll_time
+        last_controll_time = time.time()
         motor_right.value = -transf(value)
     
     def on_L3_up(self, value):
         print(f'ctrl,L3,up,{value}')
-        LastControl.time = time.time()
+        global last_controll_time
+        last_controll_time = time.time()
         motor_left.value = transf(value)
     
     def on_L3_down(self, value):
         print(f'ctrl,L3,down,{value}')
-        LastControl.time = time.time()
+        global last_controll_time
+        last_controll_time = time.time()
         motor_left.value = -transf(value)
     
     def on_x_press(self):
         print('ctrl,x,press')
-        LastControl.time = time.time()
-        speaker.play()
+        global last_controll_time
+        last_controll_time = time.time()
+        audio_play()
     
     def on_square_press(self):
         print('ctrl,square,press')
-        LastControl.time = time.time()
+        global last_controll_time
+        last_controll_time = time.time()
         high_power_led.on()
 
     def on_square_release(self):
         print('ctrl,square,release')
-        LastControl.time = time.time()
+        global last_controll_time
+        last_controll_time = time.time()
         high_power_led.off()
 
 def connect():
@@ -112,7 +117,8 @@ def start_controller():
 ##### GUI #####
 
 def read_from_gui():
-    if time.time() - LastControl.time < 1:
+    global last_controll_time
+    if time.time() - last_controll_time < 1:
         return
     
     data_from_browser = {}
@@ -126,7 +132,7 @@ def read_from_gui():
     else:
         high_power_led.off()
     if bool(data_from_browser['buzzer']):
-        speaker.play()
+        audio_play()
     print(f'gui,{data_from_browser['motor_l']},{data_from_browser['motor_r']},{data_from_browser['light']},{data_from_browser['buzzer']}')
 
 def write_to_gui():
@@ -134,7 +140,7 @@ def write_to_gui():
     data_to_browser['motor_r'] = motor_right.value
     data_to_browser['motor_l'] = motor_left.value
     data_to_browser['light'] = high_power_led.value
-    data_to_browser['buzzer'] = speaker.Playing.now
+    data_to_browser['buzzer'] = False if (proces_aplay.poll() is None) else True
     s = json.dumps(data_to_browser)
     with open('data_to_browser', 'w') as f:
         f.write(s)
