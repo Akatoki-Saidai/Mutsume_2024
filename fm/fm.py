@@ -39,7 +39,7 @@ class C():
 proces_aplay = C()
 def audio_play():
     global proces_aplay
-    if proces_aplay.poll() is None:
+    if proces_aplay.poll() == None:
         proces_aplay = subprocess.Popen("aplay --device=hw:1,0 ファイル名.wav", shell=True)
         proces_aplay.returncode
 
@@ -140,7 +140,7 @@ def write_to_gui():
     data_to_browser['motor_r'] = motor_right.value
     data_to_browser['motor_l'] = motor_left.value
     data_to_browser['light'] = high_power_led.value
-    data_to_browser['buzzer'] = False if (proces_aplay.poll() is None) else True
+    data_to_browser['buzzer'] = False if (proces_aplay.poll() == None) else True
     s = json.dumps(data_to_browser)
     with open('data_to_browser', 'w') as f:
         f.write(s)
