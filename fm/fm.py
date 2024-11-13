@@ -1,6 +1,5 @@
 # むつめ祭2024にて機体を遠隔操作するためのプログラムです
 
-# ×ボタン→〇ボタン，〇ボタン→△ボタン，△ボタン→□ボタン，□ボタン→×ボタン
 # スピーカー設定をPWM出力可能にしておく(/boot/firmware/config.txtの末尾に"dtoverlay=audremap,pins_12_13"を追加)
 
 import os
@@ -21,7 +20,7 @@ import start_gui
 ##### モーター #####
 PIN_R1 = 4
 PIN_R2 = 23
-PIN_L1 = 13
+PIN_L1 = 26
 PIN_L2 = 5
 motor_right = Motor(forward = PIN_R1, backward = PIN_R2, pin_factory = PiGPIOFactory)
 motor_left  = Motor(forward = PIN_L1, backward = PIN_L2, pin_factory = PiGPIOFactory)
@@ -39,6 +38,7 @@ class C():
 proces_aplay = C()
 def audio_play():
     global proces_aplay
+    print('speaker,play')
     if proces_aplay.poll() == None:
         proces_aplay = subprocess.Popen("aplay --device=hw:1,0 ファイル名.wav", shell=True)
         proces_aplay.returncode
@@ -57,6 +57,11 @@ def transf(raw):
     else:
         return round(temp, 1)
 
+# 右スティック前：R3_up　負
+# 右スティック後：R3_up　正
+# 左スティック前：L3_up　負
+# 左スティック後：L3_down　正
+# ×ボタン→〇ボタン，〇ボタン→△ボタン，△ボタン→□ボタン，□ボタン→×ボタン
 class MyController(Controller):
     def __init__(self, **kwargs):
         Controller.__init__(self, **kwargs)
@@ -65,42 +70,42 @@ class MyController(Controller):
         print(f'ctrl,R3,up,{value}')
         global last_controll_time
         last_controll_time = time.time()
-        motor_right.value = transf(value)
-    
-    def on_R3_down(self, value):
-        print(f'ctrl,R3,down,{value}')
-        global last_controll_time
-        last_controll_time = time.time()
-        motor_right.value = -transf(value)
+        # 右モーター前進/後退
+        motor_right.value = - value / (1 << 15)
     
     def on_L3_up(self, value):
         print(f'ctrl,L3,up,{value}')
         global last_controll_time
         last_controll_time = time.time()
-        motor_left.value = transf(value)
+        # 左モーター前進
+        motor_left.value = - value / (1 << 15)
     
     def on_L3_down(self, value):
         print(f'ctrl,L3,down,{value}')
         global last_controll_time
         last_controll_time = time.time()
-        motor_left.value = -transf(value)
+        # 左モーター後退
+        motor_left.value = - value / (1 << 15)
     
     def on_x_press(self):
         print('ctrl,x,press')
         global last_controll_time
         last_controll_time = time.time()
+        # 音楽を再生
         audio_play()
     
     def on_square_press(self):
         print('ctrl,square,press')
         global last_controll_time
         last_controll_time = time.time()
+        # ライトをオン
         high_power_led.on()
 
     def on_square_release(self):
         print('ctrl,square,release')
         global last_controll_time
         last_controll_time = time.time()
+        # ライトをオフ
         high_power_led.off()
 
 def connect():
