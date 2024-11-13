@@ -46,7 +46,7 @@ def audio_play():
 
 ###### コントローラ #####
 
-last_controll_time = time.time()  # 実質的なグローバル変数
+last_controll_time = time.time()
 
 def transf(raw):
     temp = (raw + 32767) / 65534 / 2
