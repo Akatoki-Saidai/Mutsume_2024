@@ -6,6 +6,7 @@ class Playing():
     now = False  # 実質的なグローバル変数
 
 def _play_audio(filename):
+    print('speaker,play,start')
     with wave.open(filename, 'rb') as wf:
         # PyAudioのインスタンスを生成
         speaker = pyaudio.PyAudio()
@@ -41,6 +42,7 @@ def _play_audio(filename):
         stream.close()
 
         speaker.terminate()
+    print('speaker,play,end')
 
 def play():
     if not Playing.now:

@@ -51,30 +51,37 @@ class MyController(Controller):
         Controller.__init__(self, **kwargs)
     
     def on_R3_up(self, value):
+        print(f'ctrl,R3,up,{value}')
         LastControl.time = time.time()
         motor_right.value = transf(value)
     
     def on_R3_down(self, value):
+        print(f'ctrl,R3,down,{value}')
         LastControl.time = time.time()
         motor_right.value = -transf(value)
     
     def on_L3_up(self, value):
+        print(f'ctrl,L3,up,{value}')
         LastControl.time = time.time()
         motor_left.value = transf(value)
     
     def on_L3_down(self, value):
+        print(f'ctrl,L3,down,{value}')
         LastControl.time = time.time()
         motor_left.value = -transf(value)
     
     def on_x_press(self):
+        print('ctrl,x,press')
         LastControl.time = time.time()
         speaker.play()
     
     def on_square_press(self):
+        print('ctrl,square,press')
         LastControl.time = time.time()
         high_power_led.on()
 
     def on_square_release(self):
+        print('ctrl,square,release')
         LastControl.time = time.time()
         high_power_led.off()
 
@@ -101,6 +108,7 @@ def read_from_gui():
         high_power_led.off()
     if bool(data_from_browser['buzzer']):
         speaker.play()
+    print(f'gui,{data_from_browser['motor_l']},{data_from_browser['motor_r']},{data_from_browser['light']},{data_from_browser['buzzer']}')
 
 def write_to_gui():
     data_to_browser = {}
@@ -146,7 +154,7 @@ camera_thread = threading.Thread(target=start_camera)
 
 
 while threading.active_count() != 1:
-    print(threading.active_count())
+    print(f'main,{threading.active_count()}')
     time.sleep(10)
 
 # 参考にしたサイト
