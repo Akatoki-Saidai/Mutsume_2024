@@ -5,6 +5,7 @@
 
 import os
 import json
+import subprocess
 import threading
 import time
 
@@ -30,6 +31,18 @@ motor_left  = Motor(forward = PIN_L1, backward = PIN_L2, pin_factory = PiGPIOFac
 ##### ライト #####
 high_power_led = LED(17)
 high_power_led.off()
+
+
+##### スピーカー #####
+class C():
+    def poll():
+        return None
+proces_aplay = C()
+def audio_play():
+    global proces_aplay
+    if proces_aplay.poll() is None:
+        proces_aplay = subprocess.Popen("aplay --device=hw:1,0 ファイル名.wav", shell=True)
+        proces_aplay.returncode
 
 
 ###### コントローラ #####
