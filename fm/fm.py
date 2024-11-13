@@ -85,9 +85,15 @@ class MyController(Controller):
         LastControl.time = time.time()
         high_power_led.off()
 
+def connect():
+    print('ctrl,connect')
+
+def disconnect():
+    print('ctrl,disconnect')
+
 def start_controller():
     controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
-    controller.listen()
+    controller.listen(on_connect=connect, on_disconnect=disconnect)
 
 
 ##### GUI #####
