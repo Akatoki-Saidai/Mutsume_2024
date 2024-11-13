@@ -34,7 +34,8 @@ high_power_led.off()
 
 ###### コントローラ #####
 
-operated_time = time.time()
+class LastControl():
+    time = time.time()
 
 def transf(raw):
     temp = (raw + 32767) / 65534 / 2
@@ -50,29 +51,32 @@ class MyController(Controller):
         Controller.__init__(self, **kwargs)
     
     def on_R3_up(self, value):
-        global operated_time
-        operated_time = time.time()
+        LastControl.time = time.time()
         motor_right.value = transf(value)
     
     def on_R3_down(self, value):
-        global operated_time
-        operated_time = time.time()
+        LastControl.time = time.time()
         motor_right.value = -transf(value)
     
     def on_L3_up(self, value):
-        global operated_time
-        operated_time = time.time()
+        LastControl.time = time.time()
         motor_left.value = transf(value)
     
     def on_L3_down(self, value):
-        global operated_time
-        operated_time = time.time()
+        LastControl.time = time.time()
         motor_left.value = -transf(value)
     
     def on_x_press(self):
-        global operated_time
-        operated_time = time.time()
+        LastControl.time = time.time()
         speaker.play()
+    
+    def on_square_press(self):
+        LastControl.time = time.time()
+        high_power_led.on()
+
+    def on_square_release(self):
+        LastControl.time = time.time()
+        high_power_led.off()
 
 def start_controller():
     controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
@@ -82,7 +86,7 @@ def start_controller():
 ##### GUI #####
 
 def read_from_gui():
-    if time.time() - operated_time < 1:
+    if time.time() - LastControl.time < 1:
         return
     
     data_from_browser = {}
