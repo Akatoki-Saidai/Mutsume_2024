@@ -2,11 +2,26 @@
 
 # スピーカー設定をPWM出力可能にしておく(/boot/firmware/config.txtの末尾に"dtoverlay=audremap,pins_12_13"を追加)
 
-import os
 import json
+import os
 import subprocess
+import sys
 import threading
 import time
+
+##### インストールとか #####
+if not os.path.exists(os.path.basename(__file__)):
+    print('プログラムが保存されているフォルダに移動してください')
+    exit(1)
+if sys.prefix == sys.base_prefix:
+    subprocess.run('python -m venv fm_env --system-site-packages', shell=True)
+    print('仮想環境で実行してください (fm_env/bin/activate で起動)')
+    exit(1)
+subprocess.run('pip install picamera2', shell=True)
+subprocess.run('pip install pyPS4Controller ds4drv', shell=True)
+print('\nPS4コントローラーのPSボタンとSHAREボタンを同時に長押ししてください\n')
+subprocess.run('ds4drv', shell=True)
+#######################
 
 from gpiozero import LED
 from gpiozero import Motor
@@ -187,5 +202,8 @@ while threading.active_count() != 1:
     print(f'main,{threading.active_count()}')
     time.sleep(10)
 
-# 参考にしたサイト
+### 参考にしたサイト
+# thread関連
 # https://qiita.com/kaitolucifer/items/e4ace07bd8e112388c75
+# コントローラーの接続
+# https://hellobreak.net/raspberry-pi-ps4-controller-0326/
