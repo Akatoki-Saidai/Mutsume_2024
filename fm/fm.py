@@ -10,9 +10,7 @@ import threading
 import time
 
 ##### インストールとか #####
-if not os.path.exists(os.path.basename(__file__)):
-    print('プログラムが保存されているフォルダに移動してください')
-    exit(1)
+os.chdir(os.path.dirname(__file__))
 if sys.prefix == sys.base_prefix:
     subprocess.run('python -m venv fm_env --system-site-packages', shell=True)
     print('仮想環境で実行してください (fm_env/bin/activate で起動)')
