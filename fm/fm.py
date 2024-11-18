@@ -151,7 +151,7 @@ def read_from_gui():
         high_power_led.off()
     if bool(data_from_browser['buzzer']):
         audio_play()
-    print(f'gui,{data_from_browser['motor_l']},{data_from_browser['motor_r']},{data_from_browser['light']},{data_from_browser['buzzer']}')
+    print(f"gui,{data_from_browser['motor_l']},{data_from_browser['motor_r']},{data_from_browser['light']},{data_from_browser['buzzer']}")
 
 def write_to_gui():
     data_to_browser = {}
