@@ -37,8 +37,8 @@ PIN_R1 = 4
 PIN_R2 = 23
 PIN_L1 = 26
 PIN_L2 = 5
-motor_right = Motor(forward = PIN_R1, backward = PIN_R2, pin_factory = PiGPIOFactory)
-motor_left  = Motor(forward = PIN_L1, backward = PIN_L2, pin_factory = PiGPIOFactory)
+motor_right = Motor(forward = PIN_R1, backward = PIN_R2, pin_factory = PiGPIOFactory())
+motor_left  = Motor(forward = PIN_L1, backward = PIN_L2, pin_factory = PiGPIOFactory())
 
 
 ##### ライト #####
