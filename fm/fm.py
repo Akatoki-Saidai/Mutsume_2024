@@ -5,11 +5,12 @@
 import json
 import os
 import subprocess
-import sys
+# import sys
 import threading
 import time
 
 ##### インストールとか #####
+'''
 os.chdir(os.path.dirname(__file__))
 if sys.prefix == sys.base_prefix:
     subprocess.run('python -m venv fm_env --system-site-packages', shell=True)
@@ -19,6 +20,7 @@ subprocess.run('pip install picamera2', shell=True)
 subprocess.run('pip install pyPS4Controller ds4drv', shell=True)
 print('\nPS4コントローラーのPSボタンとSHAREボタンを同時に長押ししてください\n')
 subprocess.run('ds4drv', shell=True)
+'''
 #######################
 
 from gpiozero import LED
