@@ -49,7 +49,8 @@ def audio_play():
 last_controll_time = time.time()  # 実質的なグローバル変数
 
 def transf(raw):
-    temp = raw / 32767
+    # temp = raw / 32767
+    temp = raw / (1 << 15)
     # Filter values that are too weak for the motors to move
     if abs(temp) < 0.2:  # <-- 0.3の間違いでは?
         return 0
