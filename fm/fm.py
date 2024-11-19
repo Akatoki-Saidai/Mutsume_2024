@@ -35,8 +35,8 @@ import start_gui
 ##### モーター #####
 PIN_R1 = 4
 PIN_R2 = 23
-PIN_L1 = 26
-PIN_L2 = 5
+PIN_L1 = 5
+PIN_L2 = 26
 motor_right = Motor(forward = PIN_R1, backward = PIN_R2, pin_factory = PiGPIOFactory())
 motor_left  = Motor(forward = PIN_L1, backward = PIN_L2, pin_factory = PiGPIOFactory())
 
@@ -64,9 +64,10 @@ def audio_play():
 last_controll_time = time.time()
 
 def transf(raw):
-    temp = raw / (1 << 15)
+    # temp = raw / (1 << 15)
+    temp = raw / 32767
     # Filter values that are too weak for the motors to move
-    if abs(temp) < 0.2:
+    if abs(temp) < 0.05:
         return 0
     # Return a value between 0.2 and 1.0
     else:
@@ -82,7 +83,7 @@ class MyController(Controller):
         Controller.__init__(self, **kwargs)
     
     def on_R2_press(self, value):
-        print(f'ctrl,R3,up,{value}')
+        print(f'ctrl,R2,press,{value}')
         global last_controll_time
         last_controll_time = time.time()
         # 右モーター前進/後退
