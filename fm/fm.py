@@ -64,13 +64,13 @@ def audio_play():
 last_controll_time = time.time()
 
 def transf(raw):
-    temp = (raw + 32767) / 65534 / 2
+    temp = (raw + 32767) / 65534
     # Filter values that are too weak for the motors to move
-    if abs(temp) < 0.9:  # <-- 0.3の間違いでは?
+    if abs(temp) < 0.2:
         return 0
-    # Return a value between 0.3 and 1.0
+    # Return a value between 0.2 and 1.0
     else:
-        return round(temp, 1)
+        return round(temp, 2)
 
 # 右スティック前：R3_up　負
 # 右スティック後：R3_up　正
