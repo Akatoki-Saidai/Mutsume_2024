@@ -1,6 +1,6 @@
 # むつめ祭2024にて機体を遠隔操作するためのプログラムです
 
-# スピーカー設定をPWM出力可能にしておく(/boot/firmware/config.txtの末尾に"dtoverlay=audremap,pins_12_13"を追加)
+# スピーカー設定をPWM出力可能にしておく(/boot/firmware/config.txtの末尾に"dtoverlay=audremap,pins_18_19"を追加)
 
 import json
 import os
@@ -196,6 +196,11 @@ gui_thread = threading.Thread(target=update_gui)
 
 # カメラで撮影開始
 camera_thread = threading.Thread(target=start_camera)
+
+controller_thread.start()
+server_thread.start()
+gui_thread.start()
+camera_thread.start()
 
 
 while threading.active_count() != 1:
