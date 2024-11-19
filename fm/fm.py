@@ -64,7 +64,7 @@ def audio_play():
 last_controll_time = time.time()
 
 def transf(raw):
-    temp = (raw + 32767) / 65534
+    temp = raw / 32767
     # Filter values that are too weak for the motors to move
     if abs(temp) < 0.2:
         return 0
@@ -72,8 +72,8 @@ def transf(raw):
     else:
         return round(temp, 2)
 
-# 右スティック前：R3_up　負
-# 右スティック後：R3_up　正
+# 右スティック前：R2_press　負
+# 右スティック後：R2_press　正
 # 左スティック前：L3_up　負
 # 左スティック後：L3_down　正
 # ×ボタン→〇ボタン，〇ボタン→△ボタン，△ボタン→□ボタン，□ボタン→×ボタン
