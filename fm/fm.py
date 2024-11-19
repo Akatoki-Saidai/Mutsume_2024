@@ -64,7 +64,7 @@ def audio_play():
 last_controll_time = time.time()
 
 def transf(raw):
-    temp = raw / 32767
+    temp = raw / (1 << 15)
     # Filter values that are too weak for the motors to move
     if abs(temp) < 0.2:
         return 0
@@ -81,26 +81,32 @@ class MyController(Controller):
     def __init__(self, **kwargs):
         Controller.__init__(self, **kwargs)
     
-    def on_R3_up(self, value):
+    def on_R2_press(self, value):
         print(f'ctrl,R3,up,{value}')
         global last_controll_time
         last_controll_time = time.time()
         # 右モーター前進/後退
-        motor_right.value = - value / (1 << 15)
+        power = -transf(value)
+        motor_right.value = power
+        print(power)
     
     def on_L3_up(self, value):
         print(f'ctrl,L3,up,{value}')
         global last_controll_time
         last_controll_time = time.time()
         # 左モーター前進
-        motor_left.value = - value / (1 << 15)
+        power = -transf(value)
+        motor_left.value = power
+        print(power)
     
     def on_L3_down(self, value):
         print(f'ctrl,L3,down,{value}')
         global last_controll_time
         last_controll_time = time.time()
         # 左モーター後退
-        motor_left.value = - value / (1 << 15)
+        power = -transf(value)
+        motor_left.value = power
+        print(power)
     
     def on_x_press(self):
         print('ctrl,x,press')
@@ -113,15 +119,15 @@ class MyController(Controller):
         print('ctrl,square,press')
         global last_controll_time
         last_controll_time = time.time()
-        # ライトをオン
-        high_power_led.on()
+        # ライトをオン…しません
+        # high_power_led.on()
 
     def on_square_release(self):
         print('ctrl,square,release')
         global last_controll_time
         last_controll_time = time.time()
-        # ライトをオフ
-        high_power_led.off()
+        # ライトをオフ…しません
+        # high_power_led.off()
 
 def connect():
     print('ctrl,connect')
