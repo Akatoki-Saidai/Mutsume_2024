@@ -107,6 +107,9 @@ def audio_play():
     if proces_aplay.poll() == None:
         proces_aplay = subprocess.Popen("aplay --device=hw:1,0 /home/jaxai/Desktop/GLaDOS_escape_02_entry-00.wav", shell=True)
         proces_aplay.returncode
+        print("GLaDOS Spoke")
+    else:
+        print("audio is playing now.")
 
 
 ###### コントローラ #####
@@ -172,14 +175,13 @@ class MyController(Controller):
         print(f"motor_left.value is now {motor_left.value}")
         # print(power)
 
-    def on_L3_y_at_rest(self, value):
-        print(f'ctrl,L3,rest,{value}')
+    def on_L3_y_at_rest(self):
+        print(f'ctrl,L3,rest')
         global last_controll_time
         last_controll_time = time.time()
-        # 左モーター後退
-        power = -transf(value)
-        motor_left.value = power
-        print(power)
+        # 左モーター停止
+        motor_left.value = 0
+        print("Left motor stop")
 
 
     def on_x_press(self):
