@@ -40,6 +40,48 @@ PIN_L2 = 26
 motor_right = Motor(forward = PIN_R1, backward = PIN_R2, pin_factory = PiGPIOFactory())
 motor_left  = Motor(forward = PIN_L1, backward = PIN_L2, pin_factory = PiGPIOFactory())
 
+def motor_calib():
+    power = 0
+    delta_power = 0.2
+
+    print("right_motor calibration")
+    for i in range(int(1 / delta_power)):
+        if 0<=power<=1:
+            motor_right.value = power
+            power += delta_power
+    motor_right.value = 1
+
+    for i in range((int(1 / delta_power))*2):
+        if -1<=power<=1:
+            motor_right.value = power
+            power -= delta_power
+    motor_right.value = -1
+
+    for i in range(int(1 / delta_power)):
+        if -1<=power<=0:
+            motor_right.value = power
+            power += delta_power
+    motor_right.value = 0
+
+    print("left_motor calibration")
+    for i in range(int(1 / delta_power)):
+        if 0<=power<=1:
+            motor_left.value = power
+            power += delta_power
+    motor_left.value = 1
+
+    for i in range((int(1 / delta_power))*2):
+        if -1<=power<=1:
+            motor_left.value = power
+            power -= delta_power
+    motor_left.value = -1
+
+    for i in range(int(1 / delta_power)):
+        if -1<=power<=0:
+            motor_left.value = power
+            power += delta_power
+    motor_left.value = 0
+
 
 ##### ライト #####
 high_power_led = LED(17)
@@ -83,13 +125,22 @@ class MyController(Controller):
         Controller.__init__(self, **kwargs)
     
     def on_R2_press(self, value):
-        print(f'ctrl,R2,press,{value}')
+        print(f'ctrl,R2,press(=R3),{value}')
         global last_controll_time
         last_controll_time = time.time()
         # 右モーター前進/後退
         power = -transf(value)
+        print(f"Setting motor_right.value to {power}")
         motor_right.value = power
-        print(power)
+        print(f"motor_right.value is now {motor_right.value}")
+        # print(power)
+
+    def on_R2_release(self):
+        print(f'ctrl,R2,release(=R3)')
+        global last_controll_time
+        last_controll_time = time.time()
+        # 右モーター前進/後退
+        motor_right.value = 0
     
     def on_L3_up(self, value):
         print(f'ctrl,L3,up,{value}')
@@ -97,8 +148,10 @@ class MyController(Controller):
         last_controll_time = time.time()
         # 左モーター前進
         power = -transf(value)
+        print(f"Setting motor_left.value to {power}")
         motor_left.value = power
-        print(power)
+        print(f"motor_left.value is now {motor_left.value}")
+        # print(power)
     
     def on_L3_down(self, value):
         print(f'ctrl,L3,down,{value}')
@@ -106,9 +159,21 @@ class MyController(Controller):
         last_controll_time = time.time()
         # 左モーター後退
         power = -transf(value)
+        print(f"Setting motor_left.value to {power}")
+        motor_left.value = power
+        print(f"motor_left.value is now {motor_left.value}")
+        # print(power)
+
+    def on_L3_y_at_rest(self, value):
+        print(f'ctrl,L3,rest,{value}')
+        global last_controll_time
+        last_controll_time = time.time()
+        # 左モーター後退
+        power = -transf(value)
         motor_left.value = power
         print(power)
-    
+
+
     def on_x_press(self):
         print('ctrl,x,press')
         global last_controll_time
@@ -188,6 +253,11 @@ def start_camera():
     while True:
         picam2.capture_file('camera_temp.jpg')
         os.rename("camera_temp.jpg", "camera.jpg")
+
+
+##### モーターの動作確認 #####
+
+motor_calib()
 
 
 ##### 平行処理を開始 #####
