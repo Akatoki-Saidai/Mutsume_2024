@@ -87,6 +87,8 @@ def motor_calib():
             power += delta_power
     motor_left.value = 0
     time.sleep(0.5)
+    print("motor moved")
+    time.sleep(0.5)
 
 
 ##### ライト #####
