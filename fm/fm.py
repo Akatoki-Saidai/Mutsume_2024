@@ -50,18 +50,21 @@ def motor_calib():
             motor_right.value = power
             power += delta_power
     motor_right.value = 1
+    time.sleep(0.5)
 
     for i in range((int(1 / delta_power))*2):
         if -1<=power<=1:
             motor_right.value = power
             power -= delta_power
     motor_right.value = -1
+    time.sleep(0.5)
 
     for i in range(int(1 / delta_power)):
         if -1<=power<=0:
             motor_right.value = power
             power += delta_power
     motor_right.value = 0
+    time.sleep(0.5)
 
     print("left_motor calibration")
     for i in range(int(1 / delta_power)):
@@ -69,18 +72,21 @@ def motor_calib():
             motor_left.value = power
             power += delta_power
     motor_left.value = 1
+    time.sleep(0.5)
 
     for i in range((int(1 / delta_power))*2):
         if -1<=power<=1:
             motor_left.value = power
             power -= delta_power
     motor_left.value = -1
+    time.sleep(0.5)
 
     for i in range(int(1 / delta_power)):
         if -1<=power<=0:
             motor_left.value = power
             power += delta_power
     motor_left.value = 0
+    time.sleep(0.5)
 
 
 ##### ライト #####
