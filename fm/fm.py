@@ -99,15 +99,14 @@ high_power_led.off()
 ##### スピーカー #####
 class C():
     def poll(self):
-        return None
+        return 0  # まだ開始していない
 
 proces_aplay = C()
-proces_aplay = None
 # .poll()は終了していなかったらNone，終了していたらそのステータスを返す．
 def audio_play():
     global proces_aplay
     print('speaker,play')
-    if (proces_aplay == None) or (proces_aplay.poll() != None):
+    if (proces_aplay.poll() != None):
         proces_aplay = subprocess.Popen("aplay --device=hw:1,0 /home/jaxai/Desktop/GLaDOS_escape_02_entry-00.wav", shell=True)
         # proces_aplay.returncode
         print("GLaDOS Spoke")
