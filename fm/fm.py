@@ -100,6 +100,8 @@ high_power_led.off()
 class C():
     def poll(self):
         return None
+
+proces_aplay = C()
 proces_aplay = None
 # .poll()は終了していなかったらNone，終了していたらそのステータスを返す．
 def audio_play():
