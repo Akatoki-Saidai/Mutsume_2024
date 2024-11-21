@@ -14,7 +14,7 @@ import time
 os.chdir(os.path.dirname(__file__))
 if sys.prefix == sys.base_prefix:
     subprocess.run('python -m venv fm_env --system-site-packages', shell=True)
-    print('仮想環境で実行してください (fm_env/bin/activate で起動)')
+    print('仮想環境で実行してください (source fm_env/bin/activate で起動)')
     exit(1)
 subprocess.run('pip install picamera2', shell=True)
 subprocess.run('pip install pyPS4Controller ds4drv', shell=True)
