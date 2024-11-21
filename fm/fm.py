@@ -100,13 +100,14 @@ high_power_led.off()
 class C():
     def poll(self):
         return None
-proces_aplay = C()
+proces_aplay = None
+# .poll()は終了していなかったらNone，終了していたらそのステータスを返す．
 def audio_play():
     global proces_aplay
     print('speaker,play')
-    if proces_aplay.poll() == None:
+    if (proces_aplay == None) or (proces_aplay.poll() != None):
         proces_aplay = subprocess.Popen("aplay --device=hw:1,0 /home/jaxai/Desktop/GLaDOS_escape_02_entry-00.wav", shell=True)
-        proces_aplay.returncode
+        # proces_aplay.returncode
         print("GLaDOS Spoke")
     else:
         print("audio is playing now.")
@@ -117,8 +118,7 @@ def audio_play():
 last_controll_time = time.time()
 
 def transf(raw):
-    # temp = raw / (1 << 15)
-    temp = raw / 32767
+    temp = raw / (1 << 15)
     # Filter values that are too weak for the motors to move
     if abs(temp) < 0.05:
         return 0
