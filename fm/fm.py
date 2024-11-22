@@ -22,10 +22,10 @@ if sys.prefix == sys.base_prefix:
         print('仮想環境のセットアップが完了しました')
     exit(1)
 print('実行環境の確認が完了しました\n必要なライブラリをインストールしています')
-subprocess.run('sudo pip install picamera2', shell=True)
-subprocess.run('sudo pip install pyPS4Controller ds4drv', shell=True)
+subprocess.run('pip install picamera2 libcamera', shell=True)
+subprocess.run('pip install pyPS4Controller ds4drv', shell=True)
 print('ライブラリのインストールが完了しました')
-print('コントローラと無線接続を行います\n\nPS4コントローラーのPSボタンとSHAREボタンを，青いランプが光るまで同時に長押ししてください\n')
+print('コントローラと無線接続を行います\n\nPS4コントローラーのPSボタンとSHAREボタンを同時に，青いランプが光るまで長押ししてください\n')
 subprocess.Popen('sudo ds4drv', shell=True, stdout=subprocess.DEVNULL)
 time.sleep(20)
 #######################
@@ -124,11 +124,11 @@ class C():
 
 proces_aplay = C()
 # .poll()は終了していなかったらNone，終了していたらそのステータスを返す．
-def audio_play():
+def audio_play(path_wav):
     global proces_aplay
     print('音楽を再生します')
     if (proces_aplay.poll() != None):
-        proces_aplay = subprocess.Popen("aplay --device=hw:1,0 /home/jaxai/Desktop/GLaDOS_escape_02_entry-00.wav", shell=True)
+        proces_aplay = subprocess.Popen(f"aplay --device=hw:1,0 {path_wav}", shell=True)
         # proces_aplay.returncode
         print("音楽の再生中です")
     else:
@@ -204,7 +204,7 @@ class MyController(Controller):
         global last_controll_time
         last_controll_time = time.time()
         # 音楽を再生
-        audio_play()
+        audio_play('/home/jaxai/Desktop/GLaDOS_escape_02_entry-00.wav')
     
     def on_square_press(self):
         print('△ボタンが押されました')
