@@ -259,7 +259,7 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
 
         // モーター出力などのデータをマイコンから定期的に読み込む
         function loadData() {
-            fetch(`./data_to_browser?ver=${new Date().getTime()}`)
+            fetch(`./data_to_browser.json?ver=${new Date().getTime()}`)
             .then(response => {if (!response.ok) {throw new Error("Network response is not ok");}  return response.json();} )
             .then(data => {console.log(data); updataData(data);} )
             .catch(error => {console.error("There was a problem with the fetch operation", error);} );

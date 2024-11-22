@@ -8,21 +8,21 @@ local_ip_list = socket.gethostbyname_ex(socket.gethostname())[2]
 HOST, PORT = '', 8000
 
 # 受信用のJSONファイルを作成
-with open("./data_from_browser", "w") as f:
+with open("./data_from_browser.json", "w") as f:
     f.write('{"motor_l": 0, "motor_r": 0, "light": false, "buzzer": false }')
 
 # 送信用のJSONファイルを作成
-with open("./data_to_browser", "w") as f:
-    f.write(f'{{\n    "motor_l": 0,\n    "motor_r": 0,\n    "light": false,\n    "buzzer": false,\n    "lat": null,\n    "lon": null,\n    "grav": [null, null, null],\n    "mag": [null, null, null],\n    "local_ip": "{local_ip_list[-1]}:{PORT}"\n}}')
+with open("./data_to_browser.json", "w") as f:
+    f.write('{"motor_l": 0, "motor_r": 0, "light": true, "buzzer": false, "lat": null, "lon": null, "grav": [null, null, null], "mag": [null, null, null], "local_ip": "' + f'{local_ip_list[-1]}:{PORT}' + '"}')
 
 class Handler(http.server.SimpleHTTPRequestHandler):
-    def do_POST(self):        
+    def do_POST(self):
         file_length = int(self.headers['Content-Length'])
-        with open("./data_from_browser", 'w') as f:
+        with open("./data_from_browser.json", 'w') as f:
             f.write(self.rfile.read(file_length).decode('utf-8'))
         self.send_response(201, 'Created')
         self.end_headers()
-        with open("./data_to_browser", "r") as f:
+        with open("./data_to_browser.json", "r") as f:
             self.wfile.write(f.read().encode('utf-8'))
 
 def start_server():
