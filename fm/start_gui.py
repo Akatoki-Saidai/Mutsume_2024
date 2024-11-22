@@ -20,8 +20,12 @@ for line in str_out_lines:
 HOST, PORT = '', 8000
 
 # 一度削除
-os.remove('./data_from_browser.json')
-os.remove('./data_to_browser.json')
+try:
+    os.remove('./data_from_browser.json')
+    os.remove('./data_to_browser.json')
+except Exception as e:
+    pass
+
 try:
     # 受信用のJSONファイルを作成
     with open("./data_from_browser.json", "w") as f:
