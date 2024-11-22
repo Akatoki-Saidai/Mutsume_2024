@@ -12,19 +12,19 @@ import threading
 import time
 
 ##### インストールとか #####
-print('実行環境を確認しています')
-os.chdir(os.path.dirname(__file__))
-if sys.prefix == sys.base_prefix:
-    print('<<エラー>>\n仮想環境で実行してください (source fm_env/bin/activate を実行)\nもし仮想環境で実行しているなら，sudoを外して実行しなおしてください')
-    if not os.path.exists('fm_env'):
-        print('仮想環境のセットアップを開始します')
-        subprocess.run('sudo python -m venv fm_env --system-site-packages', shell=True)
-        print('仮想環境のセットアップが完了しました')
-    exit(1)
-print('実行環境の確認が完了しました\n必要なライブラリをインストールしています')
-subprocess.run('pip install picamera2 libcamera', shell=True)
-subprocess.run('pip install pyPS4Controller ds4drv', shell=True)
-print('ライブラリのインストールが完了しました')
+# print('実行環境を確認しています')
+# os.chdir(os.path.dirname(__file__))
+# if sys.prefix == sys.base_prefix:
+#     print('<<エラー>>\n仮想環境で実行してください (source fm_env/bin/activate を実行)\nもし仮想環境で実行しているなら，sudoを外して実行しなおしてください')
+#     if not os.path.exists('fm_env'):
+#         print('仮想環境のセットアップを開始します')
+#         subprocess.run('sudo python -m venv fm_env --system-site-packages', shell=True)
+#         print('仮想環境のセットアップが完了しました')
+#     exit(1)
+# print('実行環境の確認が完了しました\n必要なライブラリをインストールしています')
+# subprocess.run('pip install picamera2 libcamera', shell=True)
+# subprocess.run('pip install pyPS4Controller ds4drv', shell=True)
+# print('ライブラリのインストールが完了しました')
 print('コントローラと無線接続を行います\n\nPS4コントローラーのPSボタンとSHAREボタンを同時に，青いランプが光るまで長押ししてください\n')
 subprocess.Popen('sudo ds4drv', shell=True, stdout=subprocess.DEVNULL)
 time.sleep(20)
