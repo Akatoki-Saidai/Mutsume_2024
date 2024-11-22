@@ -169,8 +169,8 @@ class MyController(Controller):
         print(f'右スティックの操作中. 右モーター出力:{motor_right.value} raw:{value}')
 
     def on_R2_release(self):
-        global last_controll_time
-        last_controll_time = time.time()
+        # global last_controll_time
+        # last_controll_time = time.time()
         # 右モーター停止
         motor_right.value = 0
         print(f'右スティック操作終了. 右モーター出力:{motor_right.value}')
@@ -192,12 +192,11 @@ class MyController(Controller):
         print(f'左スティックの操作中. 左モーター出力:{motor_left.value} raw:{value}')
 
     def on_L3_y_at_rest(self):
-        global last_controll_time
-        last_controll_time = time.time()
+        # global last_controll_time
+        # last_controll_time = time.time()
         # 左モーター停止
         motor_left.value = 0
         print(f'左スティック操作終了. 左モーター出力:{motor_left.value}')
-
 
     def on_x_press(self):
         print('□ボタンが押されました')
@@ -263,7 +262,7 @@ def read_from_gui():
         # high_power_led.off()
         pass
     if bool(data_from_browser['buzzer']):
-        audio_play()
+        audio_play('/home/jaxai/Desktop/GLaDOS_escape_02_entry-00.wav')
 
 def write_to_gui():
     data_to_browser = {}
@@ -279,12 +278,12 @@ def write_to_gui():
 
 def update_gui():
     while True:
-    #     try:
-        read_from_gui()
-        write_to_gui()
-        time.sleep(0.1)
-        # except Exception as e:
-        #     print(f'<<エラー>>\nGUIによる制御中にエラーが発生しました: {e}')
+        try:
+            read_from_gui()
+            write_to_gui()
+            time.sleep(0.1)
+        except Exception as e:
+            print(f'<<エラー>>\nGUIによる制御中にエラーが発生しました: {e}')
 
 print('GUIによる制御システムのセットアップが完了しました')
 
