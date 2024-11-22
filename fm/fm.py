@@ -13,7 +13,7 @@ import time
 
 ##### インストールとか #####
 # print('実行環境を確認しています')
-# os.chdir(os.path.dirname(__file__))
+os.chdir(os.path.dirname(__file__))
 # if sys.prefix == sys.base_prefix:
 #     print('<<エラー>>\n仮想環境で実行してください (source fm_env/bin/activate を実行)\nもし仮想環境で実行しているなら，sudoを外して実行しなおしてください')
 #     if not os.path.exists('fm_env'):
