@@ -273,7 +273,7 @@ def write_to_gui():
         data_to_browser['motor_r'] = motor_right.value
         data_to_browser['motor_l'] = motor_left.value
         data_to_browser['light'] = bool(high_power_led.value)
-        data_to_browser['buzzer'] = False if (proces_aplay.poll() == None) else True
+        data_to_browser['buzzer'] = False
         f.write(json.dumps(data_to_browser))
 
 def update_gui():
@@ -281,7 +281,7 @@ def update_gui():
         try:
             read_from_gui()
             write_to_gui()
-            time.sleep(0.1)
+            time.sleep(0.5)
         except Exception as e:
             print(f'<<エラー>>\nGUIによる制御中にエラーが発生しました: {e}')
 

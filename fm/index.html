@@ -264,7 +264,7 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
             .then(data => {console.log(data); updataData(data);} )
             .catch(error => {console.error("There was a problem with the fetch operation", error);} );
         }
-        setInterval(loadData, 500);
+        setInterval(loadData, 1000);
 
         // マイコンにデータを送信したあと受信する
         function sendData() {
@@ -288,12 +288,12 @@ GUI中で地理院地図を使用しているため，マップの組織外へ�
                 console.error("There was a problem with the fetch operation", error);
             });
         }
-        setInterval(sendData, 500);
+        setInterval(sendData, 1000);
 
         // カメラで撮影した写真を定期的に読み込む
-        setInterval(() => {document.getElementById("cameraImage").src = `./camera.jpg?ver=${new Date().getTime()}`}, 500);
+        setInterval(() => {document.getElementById("cameraImage").src = `./camera.jpg?ver=${new Date().getTime()}`}, 1000);
 
         // タッチしていないとき，スティックの位置を中心に戻す
-        setInterval(() => {if (!stickClicking) {setMotor(motorL - (motorL - data_from_server.motor_l)/10, motorR - (motorR - data_from_server.motor_r)/10);} }, 10);
+        setInterval(() => {if (!stickClicking) {setMotor(motorL*0.99, motorR*0.99);} }, 10);
     </script>
 </html>
