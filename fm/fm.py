@@ -124,11 +124,11 @@ class C():
 
 proces_aplay = C()
 # .poll()は終了していなかったらNone，終了していたらそのステータスを返す．
-def audio_play(path_wav):
+def audio_play(audio_path):
     global proces_aplay
     print('音楽を再生します')
     if (proces_aplay.poll() != None):
-        proces_aplay = subprocess.Popen(f"aplay --device=hw:1,0 {path_wav}", shell=True)
+        proces_aplay = subprocess.Popen(f"aplay --device=hw:1,0 {audio_path}", shell=True)
         # proces_aplay.returncode
         print("音楽の再生中です")
     else:
@@ -204,21 +204,26 @@ class MyController(Controller):
         global last_controll_time
         last_controll_time = time.time()
         # 音楽を再生
-        audio_play('/home/jaxai/Desktop/GLaDOS_escape_02_entry-00.wav')
+        audio_play("/home/jaxai/Desktop/GLaDOS_escape_02_entry-00.wav")
     
     def on_square_press(self):
         print('△ボタンが押されました')
         global last_controll_time
         last_controll_time = time.time()
-        # ライトをオン…しません
-        # high_power_led.on()
-
-    def on_square_release(self):
-        print('△ボタンが離されました')
+        audio_play("/home/jaxai/Desktop/kane_tarinai.wav")
+    
+    def on_circle_press():
+        print('×ボタンが押されました')
         global last_controll_time
         last_controll_time = time.time()
-        # ライトをオフ…しません
-        # high_power_led.off()
+        audio_play("/home/jaxai/Desktop/hatodokei.wav")
+
+    def on_triangle_press():
+        print('○ボタンが押されました')
+        global last_controll_time
+        last_controll_time = time.time()
+        audio_play("/home/jaxai/Desktop/otoko_ou!.wav")
+
 
 def connect():
     print('ctrl,connect')
