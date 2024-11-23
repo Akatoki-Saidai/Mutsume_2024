@@ -177,6 +177,8 @@ def transf(raw):
     # Return a value between 0.2 and 1.0
     else:
         return round(temp, 2)
+    
+last_r2_release_time = time.time()
 
 # 右スティック前：R2_press　負
 # 右スティック後：R2_press　正
@@ -200,8 +202,10 @@ class MyController(Controller):
         # global last_controll_time
         # last_controll_time = time.time()
         # 右モーター停止
-        motor_right.value = 0
-        logger.info('右スティックが無操作. 右モーター出力: %f', motor_right.value)
+        if time.time() - last_r2_release_time < 0.2:
+            motor_right.value = 0
+            logger.info('右スティックが無操作. 右モーター出力: %f', motor_right.value)
+        last_r2_release_time = time.time()
 
     def on_L3_up(self, value):
         global last_controll_time
