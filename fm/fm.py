@@ -245,13 +245,13 @@ class MyController(Controller):
         last_controll_time = time.time()
         audio_play("/home/jaxai/Desktop/kane_tarinai.wav")
     
-    def on_circle_press():
+    def on_circle_press(self):
         logger.info('×ボタンが押されました')
         global last_controll_time
         last_controll_time = time.time()
         audio_play("/home/jaxai/Desktop/hatodokei.wav")
 
-    def on_triangle_press():
+    def on_triangle_press(self):
         logger.info('○ボタンが押されました')
         global last_controll_time
         last_controll_time = time.time()
