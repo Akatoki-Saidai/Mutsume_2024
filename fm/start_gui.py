@@ -1,8 +1,9 @@
 import http.server
-import socketserver
-import socket
-import subprocess
+from logging import getLogger, NullHandler, Logger
 import os
+import socket
+import socketserver
+import subprocess
 
 # ローカルIPを取得
 local_ip = ""
@@ -50,14 +51,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         with open("./data_to_browser.json", "r") as f:
             self.wfile.write(f.read().encode('utf-8'))
 
-def start_server():
+def start_server(*, logger: Logger = None):
+    logger = logger or getLogger(__name__).addHandler(NullHandler())
     while True:
         try:
             with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
-                print(f"サーバーが稼働しました！  同じネットワーク内のブラウザで http://{local_ip}:{PORT} にアクセスしてください")
+                logger.info(f"サーバーが稼働しました！  同じネットワーク内のブラウザで http://{local_ip}:{PORT} にアクセスしてください")
                 httpd.serve_forever()
         except Exception as e:
-            print(f'<<エラー>>\nGUI用のサーバーでエラーが発生しました: {e}')
+            logger.error(f'<<エラー>>\nGUI用のサーバーでエラーが発生しました: {e}')
 
 ## 参考にしたサイト
 # https://stackoverflow.com/questions/66514500/how-do-i-configure-a-python-server-for-post
