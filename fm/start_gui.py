@@ -56,7 +56,7 @@ def start_server(*, logger: Logger = None):
     while True:
         try:
             with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
-                logger.info(f"サーバーが稼働しました！  同じネットワーク内のブラウザで http://{local_ip}:{PORT} にアクセスしてください")
+                logger.info(f"サーバーが稼働しました！  同じネットワーク内のブラウザで http://%s:%d にアクセスしてください", local_ip, PORT)
                 httpd.serve_forever()
         except Exception as e:
             logger.error(f'<<エラー>>\nGUI用のサーバーでエラーが発生しました: {e}')

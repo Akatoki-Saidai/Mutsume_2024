@@ -47,7 +47,7 @@ logger.info('セットアップを開始します')
 
 logger.info('実行環境を確認しています')
 if sys.prefix == sys.base_prefix:
-    logger.warning('仮想環境で実行していない可能性があります．仮想環境でない場合は次のコマンドを実行し再度このプログラムを起動してください．source fm_env/bin/activate')
+    logger.warning('<<警告>>\n仮想環境で実行していない可能性があります．仮想環境でない場合は次のコマンドを実行し再度このプログラムを起動してください．source fm_env/bin/activate')
     time.sleep(10)
 logger.info('実行環境の確認が完了しました')
 
@@ -137,7 +137,7 @@ logger.info('ライトのセットアップを開始します')
 
 # high_power_led = LED(17)
 # high_power_led.off()
-logger.warning('今回のむつめ祭ではライトの使用を取りやめました')
+logger.warning('<<警告>>\n今回のむつめ祭ではライトの使用を取りやめました')
 
 logger.info('ライトのセットアップが完了しました')
 
@@ -255,10 +255,10 @@ class MyController(Controller):
 
 
 def connect():
-    logger.warning('コントローラーと接続しました')
+    logger.warning('<<警告>>\nコントローラーと接続しました')
 
 def disconnect():
-    logger.warning('コントローラーとの接続が切れました')
+    logger.warning('<<警告>>\nコントローラーとの接続が切れました')
 
 def start_controller():
     while True:
