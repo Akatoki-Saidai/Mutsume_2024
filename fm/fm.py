@@ -24,6 +24,7 @@ os.chdir(os.path.dirname(__file__))  # このプログラムファイルの場�
 ##### ログに関する設定 #####
 try:
     os.remove('print.txt')
+    os.remove('fm.log')
 except Exception as e:
     pass
 sys.stdout = open('print.txt', 'w')  # 不要なログが大量に出てくるので，コンソールに出力しない．(あまり良くないことかも)
