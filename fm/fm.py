@@ -7,7 +7,8 @@
 # スピーカー設定をPWM出力可能にしておく(/boot/firmware/config.txtの末尾に"dtoverlay=audremap,pins_18_19"を追加)
 
 import json
-from logging import getLogger, StreamHandler, FileHandler, Formatter, Logger, DEBUG, INFO, WARNING, ERROR, CRITICAL
+from logging import getLogger, StreamHandler, Formatter, Logger, DEBUG, INFO, WARNING, ERROR, CRITICAL
+from logging.handlers import RotatingFileHandler
 import os
 import subprocess
 import sys
@@ -36,7 +37,7 @@ s_handler.setLevel(INFO)
 logger.addHandler(s_handler)
 
 tsv_format = Formatter('%(asctime)s.%(msecs)d+09:00\t%(name)s\t%(filename)s\t%(lineno)d\t%(funcName)s\t%(levelname)s\t%(message)s', '%Y-%m-%dT%H:%M:%S')
-f_handler = FileHandler('fm.log')
+f_handler = RotatingFileHandler('fm.log', maxBytes=100*1000)
 f_handler.setLevel(DEBUG)
 f_handler.setFormatter(tsv_format)
 logger.addHandler(f_handler)
@@ -317,7 +318,7 @@ def update_gui():
         try:
             read_from_gui()
             write_to_gui()
-            time.sleep(0.5)
+            time.sleep(0.8)
         except Exception as e:
             logger.error('<<エラー>>\nGUIによる制御中にエラーが発生しました: %s', e)
 
@@ -338,6 +339,7 @@ def start_camera():
         try:
             picam2.capture_file('camera_temp.jpg')
             os.rename("camera_temp.jpg", "camera.jpg")
+            time.sleep(0.1)
         except Exception as e:
             logger.error('<<エラー>>\nカメラによる画像撮影中にエラーが発生しました: %s', e)
 
